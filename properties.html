@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>عقاراتنا | Our Properties</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C9A84C;--gold-dim:rgba(201,168,76,0.15);--gold-border:rgba(201,168,76,0.3);
+  --dark:#0D1117;--dark2:#161B22;--card:#1C2128;--card2:#21262D;
+  --text:#E6EDF3;--muted:#8B949E;--border:#30363D;
+  --green:#3FB950;--yellow:#D29922;--red:#F85149;--blue:#58A6FF;--r:14px;
+}
+body{font-family:'Tajawal','Inter',sans-serif;background:var(--dark);color:var(--text);min-height:100vh}
+.hero{background:linear-gradient(160deg,#0D1117 0%,#161B40 60%,#0D1117 100%);border-bottom:1px solid var(--gold-border);padding:44px 24px 36px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(201,168,76,0.1) 0%,transparent 70%);pointer-events:none}
+.hero-icon{font-size:44px;display:block;margin-bottom:12px;filter:drop-shadow(0 4px 12px rgba(201,168,76,0.5))}
+.hero h1{font-size:26px;font-weight:800;color:var(--gold)}
+.hero p{margin-top:6px;font-size:13px;color:var(--muted)}
+.hero-stats{display:flex;justify-content:center;gap:28px;margin-top:24px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:24px;font-weight:700;color:var(--gold);display:block}
+.stat-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.filters-bar{background:var(--dark2);border-bottom:1px solid var(--border);padding:14px 20px;position:sticky;top:0;z-index:100}
+.filters-inner{max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.filter-select{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 32px 8px 14px;font-size:13px;color:var(--text);font-family:'Tajawal',sans-serif;outline:none;cursor:pointer;transition:border-color .2s;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238B949E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 10px center}
+.filter-select:focus{border-color:var(--gold)}
+.chip{padding:7px 14px;border-radius:99px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:13px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.chip:hover{border-color:var(--gold);color:var(--gold)}
+.chip.active{border-color:var(--gold);background:var(--gold-dim);color:var(--gold);font-weight:600}
+.reset-btn{margin-right:auto;padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:12px;cursor:pointer;font-family:'Tajawal',sans-serif;transition:all .15s}
+.reset-btn:hover{border-color:var(--red);color:var(--red)}
+.search-input{flex:1;min-width:180px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:13px;color:var(--text);font-family:'Tajawal',sans-serif;outline:none}
+.search-input:focus{border-color:var(--gold)}
+.search-input::placeholder{color:var(--muted)}
+.main{max-width:1100px;margin:0 auto;padding:24px 20px 60px}
+.results-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;font-size:13px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+.prop-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:transform .2s,border-color .2s,box-shadow .2s;cursor:pointer}
+.prop-card:hover{transform:translateY(-3px);border-color:var(--gold-border);box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+.card-img{height:170px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:52px;position:relative}
+.card-status{position:absolute;top:10px;right:10px;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600}
+.s-avail{background:rgba(63,185,80,0.2);color:var(--green);border:1px solid rgba(63,185,80,0.3)}
+.s-reserved{background:rgba(210,153,34,0.2);color:var(--yellow);border:1px solid rgba(210,153,34,0.3)}
+.s-sold{background:rgba(248,81,73,0.2);color:var(--red);border:1px solid rgba(248,81,73,0.3)}
+.s-rented{background:rgba(88,166,255,0.2);color:var(--blue);border:1px solid rgba(88,166,255,0.3)}
+.deal-badge{position:absolute;top:10px;left:10px;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;background:var(--gold);color:#0D1117}
+.card-body{padding:16px}
+.card-title{font-size:16px;font-weight:700;margin-bottom:4px}
+.card-loc{font-size:12px;color:var(--muted);margin-bottom:10px}
+.card-price{font-size:21px;font-weight:800;color:var(--gold);margin-bottom:10px}
+.card-price small{font-size:12px;font-weight:400;color:var(--muted)}
+.specs{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.spec{font-size:12px;color:var(--muted)}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tag{padding:3px 9px;border-radius:6px;font-size:11px;background:var(--card2);color:var(--muted);border:1px solid var(--border)}
+.tag.yes{background:rgba(63,185,80,0.1);color:var(--green);border-color:rgba(63,185,80,0.2)}
+.card-btn{width:100%;padding:10px;border-radius:8px;border:none;background:var(--gold);color:#0D1117;font-size:14px;font-weight:700;font-family:'Tajawal',sans-serif;cursor:pointer;transition:opacity .15s}
+.card-btn:hover{opacity:.88}
+.card-btn.off{background:transparent;border:1px solid var(--border);color:var(--muted);cursor:default}
+.empty{text-align:center;padding:80px 20px;color:var(--muted);grid-column:1/-1}
+.empty-icon{font-size:52px;display:block;margin-bottom:14px;opacity:.4}
+/* Modal */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--dark2);border:1px solid var(--gold-border);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;padding:26px 22px 40px;transform:translateY(40px);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.overlay.open .modal{transform:translateY(0)}
+.modal-close{float:left;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:3px 12px;font-size:18px;cursor:pointer;color:var(--muted);line-height:1.5}
+.modal h2{font-size:19px;font-weight:700;color:var(--gold);margin-bottom:4px}
+.modal-sub{font-size:13px;color:var(--muted);margin-bottom:18px}
+.mf{margin-bottom:13px}
+.mf label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+.mf input,.mf select,.mf textarea{width:100%;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 13px;font-size:14px;color:var(--text);font-family:'Tajawal',sans-serif;outline:none;transition:border-color .2s}
+.mf input:focus,.mf select:focus,.mf textarea:focus{border-color:var(--gold)}
+.mf textarea{resize:vertical;min-height:70px}
+.mf input::placeholder,.mf textarea::placeholder{color:var(--muted);opacity:.6}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.m-submit{width:100%;margin-top:18px;padding:13px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--gold),#A87C2A);color:#0D1117;font-size:15px;font-weight:700;font-family:'Tajawal',sans-serif;cursor:pointer;transition:opacity .15s}
+.m-submit:hover{opacity:.9}
+.m-submit:disabled{opacity:.5;cursor:not-allowed}
+.m-success{text-align:center;padding:20px 0}
+.m-success .check{font-size:52px;display:block;margin-bottom:12px}
+.m-success h3{color:var(--gold);font-size:18px;margin-bottom:6px}
+.m-success p{color:var(--muted);font-size:13px;line-height:1.6}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(70px);background:var(--green);color:#fff;padding:11px 22px;border-radius:99px;font-size:13px;font-weight:600;z-index:999;transition:transform .35s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap}
+.toast.err{background:var(--red)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+@media(max-width:600px){.grid{grid-template-columns:1fr}.mgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <span class="hero-icon">🏠</span>
+  <h1>عقاراتنا في الدمام</h1>
+  <p>Our Properties in Dammam — Eastern Province</p>
+  <div class="hero-stats">
+    <div class="stat"><span class="stat-num" id="c-total">6</span><div class="stat-lbl">إجمالي | Total</div></div>
+    <div class="stat"><span class="stat-num" id="c-sale">4</span><div class="stat-lbl">للبيع | For Sale</div></div>
+    <div class="stat"><span class="stat-num" id="c-rent">2</span><div class="stat-lbl">للإيجار | For Rent</div></div>
+    <div class="stat"><span class="stat-num" id="c-avail">5</span><div class="stat-lbl">متاح | Available</div></div>
+  </div>
+</div>
+
+<div class="filters-bar">
+  <div class="filters-inner">
+    <input class="search-input" id="search" placeholder="🔍 ابحث... | Search..." oninput="filter()">
+    <select class="filter-select" id="f-type" onchange="filter()">
+      <option value="">كل الأنواع | All Types</option>
+      <option value="شقة | Apartment">شقة | Apartment</option>
+      <option value="فيلا | Villa">فيلا | Villa</option>
+      <option value="أرض | Land">أرض | Land</option>
+      <option value="مكتب | Office">مكتب | Office</option>
+      <option value="محل | Shop">محل | Shop</option>
+    </select>
+    <select class="filter-select" id="f-district" onchange="filter()">
+      <option value="">كل الأحياء | All</option>
+      <option value="الشاطئ | Al-Shati">الشاطئ</option>
+      <option value="القادسية | Al-Qadisiyah">القادسية</option>
+      <option value="العزيزية | Al-Aziziyah">العزيزية</option>
+      <option value="الفيصلية | Al-Faisaliyah">الفيصلية</option>
+      <option value="الراكة | Al-Rakah">الراكة</option>
+    </select>
+    <div class="chip active" id="ch-all" onclick="setDeal('')">الكل</div>
+    <div class="chip" id="ch-sale" onclick="setDeal('بيع | For Sale')">للبيع | Sale</div>
+    <div class="chip" id="ch-rent" onclick="setDeal('إيجار | For Rent')">للإيجار | Rent</div>
+    <button class="reset-btn" onclick="reset()">↺ إعادة تعيين</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="results-bar">
+    <span id="res-count"><strong>6</strong> عقارات | properties</span>
+  </div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- Modal -->
+<div class="overlay" id="overlay" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2>🏠 <span id="m-propname"></span></h2>
+    <div class="modal-sub">سجّل اهتمامك وسنتواصل معك · Register your interest</div>
+    <div id="m-form">
+      <div class="mgrid">
+        <div class="mf"><label>الاسم · Name *</label><input id="m-name" placeholder="محمد العمر" type="text"></div>
+        <div class="mf"><label>الجوال · Mobile *</label><input id="m-mobile" placeholder="05xxxxxxxx" type="tel"></div>
+      </div>
+      <div class="mf"><label>البريد الإلكتروني · Email</label><input id="m-email" placeholder="example@email.com" type="email" dir="ltr"></div>
+      <div class="mgrid">
+        <div class="mf"><label>نوع الطلب · Request</label>
+          <select id="m-req"><option value="شراء | Buy">شراء | Buy</option><option value="إيجار | Rent">إيجار | Rent</option></select>
+        </div>
+        <div class="mf"><label>الميزانية (ريال) · Budget</label><input id="m-budget" placeholder="500000" type="number" dir="ltr"></div>
+      </div>
+      <div class="mf"><label>ملاحظات · Notes</label><textarea id="m-notes" placeholder="أي تفاصيل إضافية..."></textarea></div>
+      <button class="m-submit" id="m-btn" onclick="submitRequest()">إرسال الطلب · Send Request</button>
+    </div>
+    <div id="m-success" class="m-success" style="display:none">
+      <span class="check">✅</span>
+      <h3>تم استلام طلبك! | Request Received</h3>
+      <p>سيتواصل معك فريقنا قريباً.<br>Our team will contact you soon.</p>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── بيانات العقارات مضمّنة مباشرة ──
+const PROPERTIES = [
+  {name:"شقة فاخرة في الشاطئ",type:"شقة | Apartment",status:"متاح | Available",deal:"بيع | For Sale",price:650000,area:180,rooms:4,baths:3,floor:5,district:"الشاطئ | Al-Shati",parking:true,elevator:true,ac:true,notes:"شقة فاخرة بإطلالة على البحر، تشطيب سوبر لوكس",icon:"🏢"},
+  {name:"فيلا راقية في القادسية",type:"فيلا | Villa",status:"متاح | Available",deal:"بيع | For Sale",price:2200000,area:420,rooms:6,baths:5,floor:2,district:"القادسية | Al-Qadisiyah",parking:true,elevator:true,ac:true,notes:"فيلا دورين مع مجلس خارجي وحديقة ومسبح خاص",icon:"🏡"},
+  {name:"شقة عائلية في العزيزية",type:"شقة | Apartment",status:"متاح | Available",deal:"إيجار | For Rent",price:32000,area:120,rooms:3,baths:2,floor:2,district:"العزيزية | Al-Aziziyah",parking:true,elevator:false,ac:true,notes:"شقة عائلية في موقع مميز، قريبة من الخدمات",icon:"🏢"},
+  {name:"أرض تجارية في الفيصلية",type:"أرض | Land",status:"متاح | Available",deal:"بيع | For Sale",price:1800000,area:600,rooms:0,baths:0,floor:0,district:"الفيصلية | Al-Faisaliyah",parking:false,elevator:false,ac:false,notes:"أرض على شارعين، صالحة للبناء التجاري والسكني",icon:"🌍"},
+  {name:"مكتب تجاري في الراكة",type:"مكتب | Office",status:"متاح | Available",deal:"إيجار | For Rent",price:45000,area:90,rooms:0,baths:0,floor:3,district:"الراكة | Al-Rakah",parking:true,elevator:true,ac:true,notes:"مكتب مجهز بالكامل في برج تجاري راقٍ",icon:"🏢"},
+  {name:"شقة محجوزة في القادسية",type:"شقة | Apartment",status:"محجوز | Reserved",deal:"بيع | For Sale",price:480000,area:140,rooms:3,baths:2,floor:1,district:"القادسية | Al-Qadisiyah",parking:true,elevator:false,ac:true,notes:"شقة بتصميم عصري، ضمن قائمة الانتظار",icon:"🏢"}
+];
+
+const CLIENTS_DS = 'b45f8759-b583-48c7-9372-cc72b88767d6';
+const MCP_URL = 'https://mcp.notion.com/mcp';
+
+let activeDeal = '';
+let selectedProp = '';
+
+const STATUS_CLS = {'متاح | Available':'s-avail','محجوز | Reserved':'s-reserved','مباع | Sold':'s-sold','مؤجر | Rented':'s-rented'};
+const STATUS_AR  = {'متاح | Available':'متاح','محجوز | Reserved':'محجوز','مباع | Sold':'مباع','مؤجر | Rented':'مؤجر'};
+
+function fmtPrice(p,deal){
+  if(!p) return '–';
+  let str = p>=1000000 ? (p/1000000).toFixed(p%1000000===0?0:1)+' م' : p>=1000 ? Math.round(p/1000)+'K' : p.toLocaleString();
+  return str + ' ريال' + (deal?.includes('إيجار') ? ' <small>/ سنوياً</small>' : '');
+}
+
+function renderCard(p){
+  const avail = p.status.includes('متاح');
+  const stCls = STATUS_CLS[p.status]||'s-avail';
+  const stAr  = STATUS_AR[p.status]||'متاح';
+  const dealLbl = p.deal.includes('بيع') ? 'بيع | Sale' : 'إيجار | Rent';
+  return `
+  <div class="prop-card" onclick="openModal('${p.name.replace(/'/g,"\\'")}')">
+    <div class="card-img">
+      <span>${p.icon}</span>
+      <span class="card-status ${stCls}">${stAr}</span>
+      <span class="deal-badge">${dealLbl}</span>
+    </div>
+    <div class="card-body">
+      <div class="card-title">${p.name}</div>
+      <div class="card-loc">📍 ${p.district.split(' | ')[0]}</div>
+      <div class="card-price">${fmtPrice(p.price,p.deal)}</div>
+      <div class="specs">
+        ${p.area ? `<span class="spec">📐 ${p.area} م²</span>` : ''}
+        ${p.rooms ? `<span class="spec">🛏 ${p.rooms} غرف</span>` : ''}
+        ${p.baths ? `<span class="spec">🚿 ${p.baths}</span>` : ''}
+        ${p.floor ? `<span class="spec">🏗 ط${p.floor}</span>` : ''}
+      </div>
+      <div class="tags">
+        ${p.parking  ? `<span class="tag yes">🚗 موقف</span>` : ''}
+        ${p.elevator ? `<span class="tag yes">🛗 مصعد</span>` : ''}
+        ${p.ac       ? `<span class="tag yes">❄️ مكيف</span>` : ''}
+        <span class="tag">${p.type.split(' | ')[0]}</span>
+      </div>
+      ${avail
+        ? `<button class="card-btn" onclick="event.stopPropagation();openModal('${p.name.replace(/'/g,"\\'")}')">أنا مهتم | I'm Interested</button>`
+        : `<button class="card-btn off">${stAr}</button>`}
+    </div>
+  </div>`;
+}
+
+function filter(){
+  const q   = document.getElementById('search').value.toLowerCase();
+  const ft  = document.getElementById('f-type').value;
+  const fd  = document.getElementById('f-district').value;
+  const res = PROPERTIES.filter(p=>{
+    if(activeDeal && p.deal !== activeDeal) return false;
+    if(ft && p.type !== ft) return false;
+    if(fd && p.district !== fd) return false;
+    if(q){
+      const hay = [p.name,p.district,p.type,p.notes].join(' ').toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  document.getElementById('res-count').innerHTML=`<strong>${res.length}</strong> عقار | propert${res.length===1?'y':'ies'}`;
+  const g = document.getElementById('grid');
+  if(!res.length){
+    g.innerHTML=`<div class="empty"><span class="empty-icon">🔍</span><h3>لا توجد نتائج | No results</h3><p style="margin-top:8px;font-size:13px">جرّب تغيير الفلاتر | Try different filters</p></div>`;
+  } else {
+    g.innerHTML=res.map(renderCard).join('');
+  }
+}
+
+function setDeal(v){
+  activeDeal=v;
+  ['all','sale','rent'].forEach(k=>document.getElementById('ch-'+k).classList.remove('active'));
+  if(!v) document.getElementById('ch-all').classList.add('active');
+  else if(v.includes('بيع')) document.getElementById('ch-sale').classList.add('active');
+  else document.getElementById('ch-rent').classList.add('active');
+  filter();
+}
+
+function reset(){
+  document.getElementById('search').value='';
+  document.getElementById('f-type').value='';
+  document.getElementById('f-district').value='';
+  setDeal('');
+}
+
+function openModal(name){
+  selectedProp=name;
+  document.getElementById('m-propname').textContent=name;
+  document.getElementById('m-form').style.display='block';
+  document.getElementById('m-success').style.display='none';
+  document.getElementById('m-btn').disabled=false;
+  document.getElementById('m-btn').textContent='إرسال الطلب · Send Request';
+  ['m-name','m-mobile','m-email','m-budget','m-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(e){
+  if(e && e.target!==document.getElementById('overlay')) return;
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+async function submitRequest(){
+  const name=document.getElementById('m-name').value.trim();
+  const mobile=document.getElementById('m-mobile').value.trim();
+  if(!name||!mobile){toast('⚠️ أدخل الاسم والجوال','err');return;}
+  const btn=document.getElementById('m-btn');
+  btn.disabled=true; btn.textContent='جارٍ الإرسال...';
+  const today=new Date().toISOString().split('T')[0];
+  const budget=parseFloat(document.getElementById('m-budget').value)||null;
+  const props={
+    "اسم العميل | Client Name":name,
+    "رقم الجوال | Mobile":mobile,
+    "حالة العميل | Client Status":"جديد | New",
+    "الأولوية | Priority":"متوسطة | Medium",
+    "نوع الطلب | Request Type":document.getElementById('m-req').value,
+    "مصدر العميل | Lead Source":"موقع | Website",
+    "date:أول تواصل | First Contact:start":today,
+    "date:أول تواصل | First Contact:is_datetime":0,
+    "date:آخر تواصل | Last Contact:start":today,
+    "date:آخر تواصل | Last Contact:is_datetime":0,
+    "ملاحظات | Notes":`مهتم بعقار: ${selectedProp}${document.getElementById('m-notes').value?' — '+document.getElementById('m-notes').value:''}`
+  };
+  if(document.getElementById('m-email').value) props["البريد الإلكتروني | Email"]=document.getElementById('m-email').value;
+  if(budget) props["الميزانية (ريال) | Budget (SAR)"]=budget;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,
+        system:`You are a Notion page creator. Call notion create-pages tool with parent data_source_id="${CLIENTS_DS}" and the given properties. Return only raw JSON result.`,
+        messages:[{role:'user',content:JSON.stringify({data_source_id:CLIENTS_DS,properties:props})}],
+        mcp_servers:[{type:'url',url:MCP_URL,name:'notion'}]})
+    });
+    const data=await res.json();
+    const ok=JSON.stringify(data).includes('notion.so')||data.content?.some(c=>c.type==='mcp_tool_result');
+    if(ok){document.getElementById('m-form').style.display='none';document.getElementById('m-success').style.display='block';}
+    else throw new Error();
+  }catch{toast('❌ حدث خطأ، حاول مرة أخرى','err');btn.disabled=false;btn.textContent='إرسال الطلب · Send Request';}
+}
+
+function toast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast '+(type||'');
+  setTimeout(()=>t.classList.add('show'),10);
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+// تهيئة
+filter();
+</script>
+</body>
+</html>
