@@ -1,8 +1,8 @@
 {
-  "rewrites": [
-    { "source": "/api/properties", "destination": "/api/properties.js" },
-    { "source": "/api/clients", "destination": "/api/clients.js" },
-    { "source": "/", "destination": "/public/index.html" },
-    { "source": "/(.*)", "destination": "/public/$1" }
-  ]
+  "outputDirectory": "public",
+  "functions": {
+    "api/*.js": {
+      "runtime": "nodejs20.x"
+    }
+  }
 }
